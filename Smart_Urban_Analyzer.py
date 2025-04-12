@@ -1,13 +1,13 @@
 import streamlit as st
 from PyPDF2 import PdfReader
-import fitz  # PyMuPDF
+import pymupdf as fitz  # PyMuPDF
 import os
 import re
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import FAISS
-from langchain.embeddings import OpenAIEmbeddings
+from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings import OpenAIEmbeddings
 from langchain.chains.question_answering import load_qa_chain
-from langchain.llms import OpenAI
+from langchain_community.llms import OpenAI
 from geopy.geocoders import Nominatim
 import folium
 from shapely.geometry import Polygon
