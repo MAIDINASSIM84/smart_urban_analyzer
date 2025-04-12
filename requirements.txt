@@ -2,7 +2,7 @@ streamlit
 pypdf2
 pymupdf
 langchain
-langchain community
+langchain_community
 faiss-cpu
 openai
 pillow
