@@ -1,6 +1,12 @@
 streamlit
 pypdf2
+pymupdf
 langchain
+langchain community
 faiss-cpu
 openai
 pillow
+geopy
+folium
+shapely
+matplotlib
