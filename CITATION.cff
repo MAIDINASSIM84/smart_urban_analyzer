@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Maidi
+    given-names: Mohamed Nassim
+    email: mohamednassimmaidi@gmail.com
+    orcid: "https://orcid.org/0009-0007-4502-5745"  
+title: "Smart Urban Analyzer"
+version: 1.0.0
+date-released: 2025-04-12
+license: MIT
+repository-code: https://github.com/YOUR_USERNAME/smart_urban_compliance_analyzer
+abstract: >
+  Smart Urban Analyzer is an AI-driven tool that extracts zoning regulations from PDFs and compares them with satellite-based site conditions to detect urban planning violations. It supports automated drawing extraction, setback detection, and building height/type analysis.
