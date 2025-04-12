@@ -39,5 +39,4 @@ If you have any suggestions, questions, or find any issues, feel free to open an
 I welcome all contributions and feedback to improve this project.
 
 [Open an Issue](https://github.com/MAIDINASSIM84/smart_urban_analyzer/issues)
-
-You can also contact me by email: *mohamednassimmaidi@gmail.com*
+"This project is free for academic and non-commercial use.For commercial licenses,please contact me by email: mohamednassimmaidi@gmail.com"
