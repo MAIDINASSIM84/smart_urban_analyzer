@@ -32,3 +32,12 @@ An AI-powered tool designed to help urban planners, municipalities, and develope
 ```bash
 git clone https://github.com/your-username/smart_urban_analyzer.git
 cd smart_urban_analyzer
+
+## Feedback & Contact
+
+If you have any suggestions, questions, or find any issues, feel free to open an issue on this repository.  
+I welcome all contributions and feedback to improve this project.
+
+[Open an Issue](https://github.com/MAIDINASSIM84/smart_urban_analyzer/issues)
+
+You can also contact me by email: *mohamednassimmaidi@gmail.com*
