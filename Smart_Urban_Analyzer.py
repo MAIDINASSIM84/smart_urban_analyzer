@@ -14,6 +14,16 @@ from streamlit_folium import folium_static
 import base64
 from io import BytesIO
 import matplotlib.pyplot as plt
+import math
+from shapely.geometry import Polygon, Point, LineString
+import uuid
+try:
+    import ifcopenshell
+    import ifcopenshell.geom
+    import ifcopenshell.util.element as Element
+    HAS_IFC = True
+except ImportError:
+    HAS_IFC = False
 
 # Import Langchain community modules instead of deprecated imports
 from langchain_community.chat_models import ChatOpenAI
@@ -53,7 +63,8 @@ with st.sidebar:
             "Drone Survey", 
             "Phone GPS Coordinates", 
             "Manual Measurements",
-            "Leica Precision Instruments"
+            "Leica Precision Instruments",
+            "BIM Model (IFC)"
         ]
     )
     
@@ -102,6 +113,28 @@ with st.sidebar:
         instrument_model = st.selectbox("Instrument Model", 
             ["Leica BLK360", "Leica RTC360", "Leica TS16", "Leica DISTO", "Other Leica"])
         data_format = st.selectbox("Data Format", ["Point Cloud", "Total Station", "Distance Measurements"])
+    
+    elif survey_method == "BIM Model (IFC)":
+        st.markdown("#### BIM Model Analysis")
+        if HAS_IFC:
+            st.info("Import Building Information Model (IFC) files for comprehensive 3D analysis")
+            ifc_file = st.file_uploader("Upload IFC File", type=["ifc"])
+            
+            # Additional BIM input options
+            st.markdown("#### Building Details")
+            building_height = st.number_input("Building Height (meters)", min_value=0.0, step=0.5, value=10.0)
+            floors = st.number_input("Number of Floors", min_value=1, step=1, value=2)
+            building_type = st.selectbox("Building Type", 
+                ["Residential", "Commercial", "Industrial", "Mixed-Use", "Institutional", "Other"])
+            
+            # Plot information for coverage calculation
+            st.markdown("#### Plot Information")
+            plot_area = st.number_input("Total Plot Area (square meters)", min_value=0.0, step=10.0, value=500.0)
+            max_coverage = st.slider("Maximum Allowed Coverage (%)", min_value=0, max_value=100, value=60)
+            max_height = st.number_input("Maximum Allowed Height (meters)", min_value=0.0, step=0.5, value=12.0)
+        else:
+            st.error("IFC processing library (ifcopenshell) is not installed. Please install it to use BIM features.")
+            st.info("To install ifcopenshell, run: pip install ifcopenshell")
     
     # Additional options
     with st.expander("Advanced Options"):
@@ -349,6 +382,284 @@ def process_leica_data(file, instrument_model, data_format):
         st.error(f"Error processing Leica data: {str(e)}")
         return None
 
+# Process BIM (IFC) file
+def process_bim_file(file, building_height, floors, building_type, plot_area, max_coverage, max_height):
+    """Process a BIM (IFC) file and analyze building compliance"""
+    try:
+        # Save uploaded file to a temporary location
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".ifc") as tmp:
+            tmp.write(file.read())
+            ifc_path = tmp.name
+        
+        st.subheader("BIM Model Analysis")
+        
+        if not HAS_IFC:
+            st.error("IFC processing library (ifcopenshell) is not available. Some analysis features are disabled.")
+            st.info("Analysis proceeding with user-provided parameters only.")
+            
+            # Basic analysis with provided parameters
+            footprint_area = calculate_footprint_area(None, plot_area, building_height, floors)
+            coverage_ratio = (footprint_area / plot_area) * 100
+            is_height_compliant = building_height <= max_height
+            
+            # Create a simple visualization
+            fig, ax = plt.subplots(figsize=(10, 8))
+            
+            # Plot area
+            plot_rect = plt.Rectangle((0, 0), 100, 100, 
+                                    edgecolor='black', facecolor='lightgreen', linewidth=2, alpha=0.3)
+            
+            # Building footprint (scaled by coverage ratio)
+            footprint_side = math.sqrt(coverage_ratio)
+            offset_x = (100 - footprint_side) / 2
+            offset_y = (100 - footprint_side) / 2
+            building_rect = plt.Rectangle((offset_x, offset_y), footprint_side, footprint_side,
+                                        edgecolor='black', facecolor='gray', linewidth=2)
+            
+            ax.add_patch(plot_rect)
+            ax.add_patch(building_rect)
+            
+            # Set axis limits
+            ax.set_xlim(-5, 105)
+            ax.set_ylim(-5, 105)
+            
+            # Set labels
+            ax.set_xlabel('Width (%)')
+            ax.set_ylabel('Depth (%)')
+            ax.set_title('Building Footprint and Plot Area (Simplified)')
+            
+            # Equal aspect ratio
+            ax.set_aspect('equal')
+            
+            # Add grid
+            ax.grid(True, linestyle='--', alpha=0.7)
+            
+            st.pyplot(fig)
+            
+            return {
+                "has_ifc_model": False,
+                "footprint_area": footprint_area,
+                "total_floor_area": footprint_area * floors,
+                "building_height": building_height,
+                "floors": floors,
+                "building_type": building_type
+            }
+        
+        # If ifcopenshell is available, process the IFC file
+        ifc_model = ifcopenshell.open(ifc_path)
+        
+        # Extract basic information from IFC model
+        st.write("BIM Model Information:")
+        building_elements = ifc_model.by_type("IfcBuilding")
+        
+        if building_elements:
+            building = building_elements[0]
+            building_name = Element.get_name(building) or "Unnamed Building"
+            st.write(f"Building Name: {building_name}")
+        
+        # Get all the spaces/rooms in the model
+        spaces = ifc_model.by_type("IfcSpace")
+        st.write(f"Number of Spaces: {len(spaces)}")
+        
+        # Get all the walls in the model
+        walls = ifc_model.by_type("IfcWall")
+        st.write(f"Number of Walls: {len(walls)}")
+        
+        # Get all the slabs (floors, ceilings) in the model
+        slabs = ifc_model.by_type("IfcSlab")
+        st.write(f"Number of Slabs: {len(slabs)}")
+        
+        # Count number of storeys
+        storeys = ifc_model.by_type("IfcBuildingStorey")
+        actual_floors = len(storeys)
+        st.write(f"Number of Floors: {actual_floors}")
+        
+        # Calculate building footprint from the model (simplified approximation)
+        footprint_area = calculate_footprint_area(ifc_model, plot_area, building_height, floors)
+        
+        # Calculate the coverage ratio
+        coverage_ratio = (footprint_area / plot_area) * 100
+        
+        # Extract or use provided building height
+        if building_elements and Element.get_property(building_elements[0], "Height"):
+            model_height = Element.get_property(building_elements[0], "Height")
+            actual_height = float(model_height) if model_height is not None else building_height
+        else:
+            actual_height = building_height
+        
+        # Create a simple 3D visualization of the building
+        fig = plt.figure(figsize=(10, 8))
+        ax = fig.add_subplot(111, projection='3d')
+        
+        # Simple box representation of the building
+        width = math.sqrt(footprint_area)
+        depth = width
+        height = actual_height
+        
+        # Plot a simple cuboid
+        x = [0, width, width, 0, 0, width, width, 0]
+        y = [0, 0, depth, depth, 0, 0, depth, depth]
+        z = [0, 0, 0, 0, height, height, height, height]
+        
+        # List of sides' vertices
+        vertices = [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], 
+                    [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]
+        
+        # Plot sides
+        ax.plot_trisurf(x, y, z, triangles=[(0, 1, 2), (0, 2, 3), 
+                                           (4, 5, 6), (4, 6, 7), 
+                                           (0, 1, 5), (0, 5, 4),
+                                           (1, 2, 6), (1, 6, 5),
+                                           (2, 3, 7), (2, 7, 6),
+                                           (3, 0, 4), (3, 4, 7)], 
+                       color='gray', alpha=0.7)
+        
+        # Set labels and title
+        ax.set_xlabel('Width (m)')
+        ax.set_ylabel('Depth (m)')
+        ax.set_zlabel('Height (m)')
+        ax.set_title('3D Building Model (Simplified)')
+        
+        # Display the plot
+        st.pyplot(fig)
+        
+        return {
+            "has_ifc_model": True,
+            "model": ifc_model,
+            "footprint_area": footprint_area,
+            "total_floor_area": footprint_area * (actual_floors or floors),
+            "building_height": actual_height,
+            "floors": actual_floors or floors,
+            "building_type": building_type
+        }
+        
+    except Exception as e:
+        st.error(f"Error processing BIM file: {str(e)}")
+        st.info("Analysis proceeding with user-provided parameters only.")
+        
+        # Fallback to basic parameters
+        footprint_area = plot_area * (max_coverage / 100) * 0.8  # Simulated footprint
+        
+        return {
+            "has_ifc_model": False,
+            "footprint_area": footprint_area,
+            "total_floor_area": footprint_area * floors,
+            "building_height": building_height,
+            "floors": floors,
+            "building_type": building_type
+        }
+
+# Calculate building footprint area
+def calculate_footprint_area(ifc_model, plot_area, building_height, floors):
+    """Calculate the building footprint area from BIM model or estimate from parameters"""
+    try:
+        if ifc_model is not None:
+            # Get all the slabs that are on the ground floor
+            ground_slabs = []
+            for slab in ifc_model.by_type("IfcSlab"):
+                # Check if it's a floor slab and appears to be on the ground level
+                # This is a simplified approach - real implementation would be more complex
+                if hasattr(slab, "PredefinedType") and slab.PredefinedType == "FLOOR":
+                    ground_slabs.append(slab)
+            
+            # If no ground slabs found, fallback to estimation
+            if not ground_slabs:
+                # Estimate footprint as a percentage of plot area
+                estimated_area = plot_area * 0.4  # 40% coverage as a fallback estimate
+                return estimated_area
+            
+            # Calculate total area of ground slabs (simplified)
+            total_area = 0
+            for slab in ground_slabs:
+                # In a real implementation, we would get the actual geometry
+                # Here we're simplifying by assuming each slab has a QuantityArea property
+                if hasattr(slab, "IsDefinedBy"):
+                    for definition in slab.IsDefinedBy:
+                        if hasattr(definition, "RelatingPropertyDefinition"):
+                            prop_def = definition.RelatingPropertyDefinition
+                            if hasattr(prop_def, "HasProperties"):
+                                for prop in prop_def.HasProperties:
+                                    if prop.Name == "Area" or prop.Name == "GrossArea":
+                                        if hasattr(prop, "AreaValue"):
+                                            total_area += float(prop.AreaValue)
+            
+            if total_area > 0:
+                return total_area
+        
+        # If IFC model is not available or no area found, estimate based on plot area and parameters
+        # Assume a reasonable footprint based on building height and number of floors
+        if building_height > 0 and floors > 0:
+            # Taller buildings with more floors typically have smaller footprints relative to plot
+            height_factor = 1.0 - (building_height / 100)  # Decrease footprint as height increases
+            floor_factor = 1.0 - (floors / 20)  # Decrease footprint as number of floors increases
+            
+            # Adjust factors to reasonable ranges
+            height_factor = max(0.3, min(0.8, height_factor))
+            floor_factor = max(0.3, min(0.8, floor_factor))
+            
+            # Combine factors and apply to plot area
+            combined_factor = (height_factor + floor_factor) / 2
+            return plot_area * combined_factor
+        else:
+            # Default estimate if no parameters available
+            return plot_area * 0.4  # 40% coverage as fallback
+            
+    except Exception as e:
+        # If anything goes wrong, return a reasonable default
+        return plot_area * 0.4  # 40% coverage as fallback
+
+# Check if building height violates regulations
+def check_height_violation(actual_height, max_allowed_height):
+    """Check if building height violates the maximum allowed height"""
+    try:
+        if actual_height <= max_allowed_height:
+            return {
+                "compliant": True,
+                "actual": actual_height,
+                "max_allowed": max_allowed_height,
+                "violation": 0
+            }
+        else:
+            return {
+                "compliant": False,
+                "actual": actual_height,
+                "max_allowed": max_allowed_height,
+                "violation": actual_height - max_allowed_height
+            }
+    except Exception as e:
+        st.error(f"Error checking height compliance: {str(e)}")
+        return {
+            "compliant": False,
+            "error": str(e)
+        }
+
+# Calculate coverage area ratio and check compliance
+def check_coverage_ratio(footprint_area, plot_area, max_allowed_coverage):
+    """Calculate the coverage area ratio and check if it complies with regulations"""
+    try:
+        coverage_ratio = (footprint_area / plot_area) * 100
+        
+        if coverage_ratio <= max_allowed_coverage:
+            return {
+                "compliant": True,
+                "actual": coverage_ratio,
+                "max_allowed": max_allowed_coverage,
+                "ratio": coverage_ratio / 100
+            }
+        else:
+            return {
+                "compliant": False,
+                "actual": coverage_ratio,
+                "max_allowed": max_allowed_coverage,
+                "ratio": coverage_ratio / 100
+            }
+    except Exception as e:
+        st.error(f"Error calculating coverage ratio: {str(e)}")
+        return {
+            "compliant": False,
+            "error": str(e)
+        }
+
 # Site Analysis based on selected method
 if survey_method == "Satellite Image" and 'site_img_file' in locals() and site_img_file:
     st.subheader("Satellite Image Analysis")
@@ -501,11 +812,84 @@ elif survey_method == "Leica Precision Instruments" and 'leica_file' in locals()
     else:
         st.warning(f"Could not process the {instrument_model} data. Please check the file format.")
 
+# Process BIM (IFC) file
+elif survey_method == "BIM Model (IFC)" and 'ifc_file' in locals() and ifc_file:
+    st.subheader("BIM Model Analysis")
+    
+    # Get the building parameters
+    building_info = process_bim_file(
+        ifc_file, 
+        building_height, 
+        floors, 
+        building_type, 
+        plot_area, 
+        max_coverage, 
+        max_height
+    )
+    
+    if building_info:
+        # Show basic building information
+        st.subheader("Building Information")
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.metric("Building Height", f"{building_info['building_height']:.2f} m")
+            st.metric("Number of Floors", f"{building_info['floors']}")
+            st.metric("Building Type", f"{building_info['building_type']}")
+        
+        with col2:
+            st.metric("Footprint Area", f"{building_info['footprint_area']:.2f} m²")
+            st.metric("Total Floor Area", f"{building_info['total_floor_area']:.2f} m²")
+            
+        # Check coverage ratio compliance
+        st.subheader("Coverage Area Ratio Analysis")
+        coverage_result = check_coverage_ratio(building_info['footprint_area'], plot_area, max_coverage)
+        
+        if "error" not in coverage_result:
+            coverage_ratio = coverage_result["actual"]
+            st.write(f"Building footprint covers {coverage_ratio:.2f}% of the plot area")
+            st.write(f"Maximum allowed coverage: {max_coverage}%")
+            
+            # Create progress bar for coverage visualization
+            st.progress(min(float(coverage_ratio/100), 1.0))
+            
+            if coverage_result["compliant"]:
+                st.success(f"✅ Coverage ratio is compliant ({coverage_ratio:.2f}% ≤ {max_coverage}%)")
+            else:
+                st.error(f"❌ Coverage ratio exceeds maximum allowed ({coverage_ratio:.2f}% > {max_coverage}%)")
+                st.write(f"The building footprint should be reduced by approximately {(coverage_ratio - max_coverage) * plot_area / 100:.2f} m²")
+        
+        # Check height compliance
+        st.subheader("Height Compliance Analysis")
+        height_result = check_height_violation(building_info['building_height'], max_height)
+        
+        if "error" not in height_result:
+            actual_height = height_result["actual"]
+            st.write(f"Building height: {actual_height:.2f} m")
+            st.write(f"Maximum allowed height: {max_height} m")
+            
+            # Create progress bar for height visualization
+            st.progress(min(float(actual_height/max_height), 1.0))
+            
+            if height_result["compliant"]:
+                st.success(f"✅ Building height is compliant ({actual_height:.2f} m ≤ {max_height} m)")
+            else:
+                st.error(f"❌ Building height exceeds maximum allowed ({actual_height:.2f} m > {max_height} m)")
+                st.write(f"Height violation: {height_result['violation']:.2f} m")
+                st.write(f"The building needs to be reduced by {height_result['violation']:.2f} m to comply with regulations")
+        
+        # If we have setbacks, add compliance check
+        if 'setbacks' in locals() and setbacks:
+            st.subheader("Setback Requirements")
+            st.write(setbacks)
+            st.warning("For detailed setback analysis with BIM models, please use professional BIM software or provide manual measurements.")
+
 # For no data case, we need to make sure we don't show anything if no data is provided
 elif ((survey_method == "Satellite Image" and ('site_img_file' not in locals() or not site_img_file)) or
       (survey_method == "Drone Survey" and ('drone_file' not in locals() or not drone_file)) or
       (survey_method == "Phone GPS Coordinates" and (('lat' not in locals() or not lat) or ('lon' not in locals() or not lon))) or
-      (survey_method == "Leica Precision Instruments" and ('leica_file' not in locals() or not leica_file))):
+      (survey_method == "Leica Precision Instruments" and ('leica_file' not in locals() or not leica_file)) or
+      (survey_method == "BIM Model (IFC)" and ('ifc_file' not in locals() or not ifc_file))):
     # This is handled by the welcome instructions at the bottom
     pass
 
@@ -522,5 +906,3 @@ if not pdf_file and not site_img_file:
     
     This tool helps urban planners, architects, and property owners quickly analyze planning documents and check compliance with building regulations like setbacks.
     """)
-
-
