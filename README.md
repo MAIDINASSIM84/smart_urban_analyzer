@@ -1,61 +1,41 @@
 # Smart Urban Analyzer
 
-*Smart Urban Analyzer* is a semi-automated, AI-powered application that analyzes urban planning regulations, building setbacks, heights, and land-use from PDF regulations and compares them to geospatial data from multiple sources. It's tailored for authorities, urban planners, and developers, offering compliance checks in real-time.
+A comprehensive tool for urban planning analysis with multiple data collection methods.
 
----
+## Features
 
-## Key Features
+- **PDF Document Analysis**: Upload urban planning regulations PDFs and extract setback requirements automatically. Ask questions about the regulations using AI.
 
-- Extracts urban planning rules from PDF regulations using NLP.
-- Detects and evaluates site plots from:
-  - Satellite imagery
-  - Drone captures (uploaded manually)
-  - Mobile phone GPS with image input
-  - Manual uploads of CAD/IFC files
-- Compares extracted site data against regulatory constraints (e.g., setbacks).
-- Alerts on violations visually and via reports.
-- Compatible with IFC, AutoCAD, and PDF documents.
+- **Multiple Survey Methods**:
+  - **Satellite Image Analysis**: Upload and analyze satellite imagery to detect building structures.
+  - **Drone Survey**: Process drone imagery with metadata about flight altitude and resolution.
+  - **Phone GPS Coordinates**: Input GPS data from smartphone apps with interactive map visualization.
+  - **Manual Measurements**: Enter plot and building dimensions with interactive visualization.
+  - **Leica Precision Instruments**: Import and process data from professional survey equipment.
 
----
+- **Compliance Checking**: Automatically compare building layouts against setback regulations to identify potential violations.
 
-## Supported Inputs
+## Requirements
 
-- *PDF regulations* (extracted using LangChain + PyPDF2)
-- *Satellite imagery* via APIs
-- *Drone images* (manual upload)
-- *GPS & photos* from mobile devices
-- *AutoCAD (.dwg/.dxf)* and *IFC (BIM)* file upload
+- Python 3.9+
+- Streamlit
+- OpenAI API key
+- Other dependencies listed in requirements.txt
 
----
+## Installation
 
-## Use Cases
+1. Clone this repository
+2. Install dependencies: `pip install -r requirements.txt`
+3. Set your OpenAI API key in environment variables
+4. Run the application: `streamlit run Smart_Urban_Analyzer_enhanced.py`
 
-- Urban Planning Departments
-- Municipalities (e.g., MME Qatar)
-- Architecture & Engineering Firms
-- Construction Compliance Checks
-- Smart City Platforms
+## Usage
 
----
-
-## Getting Started
-
-1. Clone the repo
-2. Set up virtual env & install requirements
-3. Run the Streamlit app
-4. Upload your site data (PDF + CAD + images)
-5. View alerts and generate reports
-
----
+1. Upload a PDF containing urban regulations
+2. Select a site survey method in the sidebar
+3. Provide the required input for your selected method
+4. View the analysis results and compliance checks
 
 ## License
 
-MIT License – See [LICENSE](LICENSE)
-
----
-
-## Contact
-
-For collaboration, licensing, or research use:  
-*Mohamed Nassim Maidi*  
-Email: mohamednassimmaidi@gmail.com
+This code is provided for non-commercial use only. See LICENSE file for details.
