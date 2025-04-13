@@ -43,7 +43,7 @@ The system classifies buildings into types using multiple approaches:
 - **BIM Metadata**: Extract building type information from BIM model properties.
 - **Regulation Cross-Reference**: Compare building characteristics against zoning definitions of different building categories.
 ## Coverage Area Ratio Analysis
-Coverage Area Ratio (CAR) is automatically calculated to ensure compliance:
+Coverage Area Ratio (CAR) and Floor Area Ratio (FAR) is automatically calculated to ensure compliance:
 - **Building Footprint Detection**: Automatically trace building outlines from satellite or drone imagery.
 - **Plot Boundary Detection**: Define legal property boundaries from survey data.
 - **Ratio Calculation**: Calculate percentage of plot area covered by buildings.
