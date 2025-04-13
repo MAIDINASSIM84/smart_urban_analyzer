@@ -11,6 +11,7 @@ A comprehensive tool for urban planning analysis with multiple data collection m
   - **Drone Survey**: Process drone imagery with metadata about flight altitude and resolution to create 3D models for height analysis.
   - **Phone GPS Coordinates**: Input GPS data from smartphone apps with interactive map visualization.
   - **Manual Measurements**: Enter plot and building dimensions with interactive visualization.
+  - **Survey Equipment Coordinates**: Upload site coordinates collected via any standard surveying equipment (e.g., Leica, Trimble, or GPS tools).
   - **Leica Precision Instruments**: Import and process data from professional survey equipment.
   - **Manual Measurements**: Enter plot and building dimensions with interactive visualization including height and floor information.
   - **Leica Precision Instruments**: Import and process data from professional survey equipment for high-precision measurements.
