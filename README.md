@@ -1,71 +1,61 @@
 # Smart Urban Analyzer
 
-*Smart Urban Analyzer* is an AI-powered application that transforms how urban planners, architects, and municipalities assess compliance with urban planning regulations. It extracts rules from official documents and automatically evaluates proposed building designs using AI, computer vision, and BIM data.
+*Smart Urban Analyzer* is a semi-automated, AI-powered application that analyzes urban planning regulations, building setbacks, heights, and land-use from PDF regulations and compares them to geospatial data from multiple sources. It's tailored for authorities, urban planners, and developers, offering compliance checks in real-time.
 
 ---
 
-### Key Features
+## Key Features
 
-- *Automated Rule Extraction* from PDF urban planning codes
-- *Compliance Checking* for setbacks, height limits, floor area ratios, and more
-- *Upload Support*: PDF documents, IFC files (BIM), AutoCAD files (DWG/DXF), and satellite images
-- *Satellite Structure Detection* using AI-based image analysis
-- *Visual and Textual Compliance Reports*
-- *User-Friendly Interface* for professionals with no programming background
-
----
-
-### How It Works
-
-1. Upload PDF regulations or urban code documents.
-2. Upload your building model (IFC, DWG, DXF) and optionally a satellite image.
-3. The system extracts rules and analyzes your project.
-4. It returns an intelligent report showing:
-   - Which rules are satisfied
-   - Where compliance issues exist
-   - Visual illustrations (where available)
+- Extracts urban planning rules from PDF regulations using NLP.
+- Detects and evaluates site plots from:
+  - Satellite imagery
+  - Drone captures (uploaded manually)
+  - Mobile phone GPS with image input
+  - Manual uploads of CAD/IFC files
+- Compares extracted site data against regulatory constraints (e.g., setbacks).
+- Alerts on violations visually and via reports.
+- Compatible with IFC, AutoCAD, and PDF documents.
 
 ---
 
-### Technologies Used
+## Supported Inputs
 
-- *Python, **LangChain, **OpenAI API*
-- *PyMuPDF, **ifcopenshell, **AutoCAD file parser*
-- *Satellite image processing*
-- *Streamlit for the interface*
-- *PDF + BIM + Geospatial integration*
-
----
-
-### Use Cases
-
-- Urban development authorities
-- Architects and civil engineers
-- Construction permit approval systems
-- Academic and smart city research projects
+- *PDF regulations* (extracted using LangChain + PyPDF2)
+- *Satellite imagery* via APIs
+- *Drone images* (manual upload)
+- *GPS & photos* from mobile devices
+- *AutoCAD (.dwg/.dxf)* and *IFC (BIM)* file upload
 
 ---
 
-### License
+## Use Cases
 
-This project is licensed under a *customized MIT License*:
-
-- *Permitted*: Research, educational, personal, and non-commercial use
-- *Prohibited: Any commercial use, paid redistribution, or publication in commercial journals (e.g., Elsevier) without **explicit written permission from the author*
-
-For licensing inquiries: [mohamednassimmaidi@gmail.com]
+- Urban Planning Departments
+- Municipalities (e.g., MME Qatar)
+- Architecture & Engineering Firms
+- Construction Compliance Checks
+- Smart City Platforms
 
 ---
 
-### Citation
+## Getting Started
 
-If you use this software in your research, please cite:
+1. Clone the repo
+2. Set up virtual env & install requirements
+3. Run the Streamlit app
+4. Upload your site data (PDF + CAD + images)
+5. View alerts and generate reports
 
-```bibtex
-@software{maidi_Smart_Urban_Analyzer_2025,
-  author       = {Mohamed Nassim Maidi},
-  title        = {Smart Urban Analyzer: AI for Urban Regulation and BIM Compliance},
-  year         = 2025,
-  url          = {https://github.com/your-repo},
-  note         = {Preprint published, under review}
-}
+---
+
+## License
+
+MIT License – See [LICENSE](LICENSE)
+
+---
+
+## Contact
+
+For collaboration, licensing, or research use:  
+*Mohamed Nassim Maidi*  
+Email: mohamednassimmaidi@gmail.com
