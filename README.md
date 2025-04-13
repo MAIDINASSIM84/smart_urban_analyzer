@@ -1,42 +1,71 @@
 # Smart Urban Analyzer
 
-An AI-powered tool designed to help urban planners, municipalities, and developers automate the analysis of planning documents, satellite imagery, and construction compliance — starting with setback violations and expanding into broader urban intelligence.
+*Smart Urban Analyzer* is an AI-powered application that transforms how urban planners, architects, and municipalities assess compliance with urban planning regulations. It extracts rules from official documents and automatically evaluates proposed building designs using AI, computer vision, and BIM data.
 
 ---
 
-## Features
+### Key Features
 
-- *Chat with urban regulation PDFs* (e.g. master plans, zoning codes)
-- *Extract site plans or architectural drawings* directly from PDF files
-- *Analyze real satellite plots* and compare to site boundaries
-- *Automatically detect setback or zoning violations*
-- Built with *Streamlit, **Langchain, **FAISS, and **OpenCV*
-
----
-
-## Tech Stack
-
-- Python
-- Streamlit
-- Langchain + FAISS
-- PyPDF2
-- OpenCV
-- Geospatial APIs (e.g., Google Maps, OpenStreetMap)
+- *Automated Rule Extraction* from PDF urban planning codes
+- *Compliance Checking* for setbacks, height limits, floor area ratios, and more
+- *Upload Support*: PDF documents, IFC files (BIM), AutoCAD files (DWG/DXF), and satellite images
+- *Satellite Structure Detection* using AI-based image analysis
+- *Visual and Textual Compliance Reports*
+- *User-Friendly Interface* for professionals with no programming background
 
 ---
 
-## Getting Started
+### How It Works
 
-### 1. Clone the repository
+1. Upload PDF regulations or urban code documents.
+2. Upload your building model (IFC, DWG, DXF) and optionally a satellite image.
+3. The system extracts rules and analyzes your project.
+4. It returns an intelligent report showing:
+   - Which rules are satisfied
+   - Where compliance issues exist
+   - Visual illustrations (where available)
 
-```bash
-git clone https://github.com/your-username/smart_urban_analyzer.git
-cd smart_urban_analyzer
+---
 
-## Feedback & Contact
+### Technologies Used
 
-If you have any suggestions, questions, or find any issues, feel free to open an issue on this repository.  
-I welcome all contributions and feedback to improve this project.
+- *Python, **LangChain, **OpenAI API*
+- *PyMuPDF, **ifcopenshell, **AutoCAD file parser*
+- *Satellite image processing*
+- *Streamlit for the interface*
+- *PDF + BIM + Geospatial integration*
 
-[Open an Issue](https://github.com/MAIDINASSIM84/smart_urban_analyzer/issues)
-"This project is free for academic and non-commercial use.For commercial licenses,please contact me by email: mohamednassimmaidi@gmail.com"
+---
+
+### Use Cases
+
+- Urban development authorities
+- Architects and civil engineers
+- Construction permit approval systems
+- Academic and smart city research projects
+
+---
+
+### License
+
+This project is licensed under a *customized MIT License*:
+
+- *Permitted*: Research, educational, personal, and non-commercial use
+- *Prohibited: Any commercial use, paid redistribution, or publication in commercial journals (e.g., Elsevier) without **explicit written permission from the author*
+
+For licensing inquiries: [mohamednassimmaidi@gmail.com]
+
+---
+
+### Citation
+
+If you use this software in your research, please cite:
+
+```bibtex
+@software{maidi_Smart_Urban_Analyzer_2025,
+  author       = {Mohamed Nassim Maidi},
+  title        = {Smart Urban Analyzer: AI for Urban Regulation and BIM Compliance},
+  year         = 2025,
+  url          = {https://github.com/your-repo},
+  note         = {Preprint published, under review}
+}
