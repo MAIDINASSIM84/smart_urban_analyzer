@@ -40,6 +40,9 @@ The application is built for global use with flexible data integration capabilit
   - Plot coverage area ratio calculation
   - Comprehensive compliance reporting with visualizations
   - Adaptable to any region's zoning regulations
+  - Monitoring and violation detection system
+  - Scheduled property compliance checks
+  - Email and SMS alerts for violations
 
 - **Advanced Visualization**:
   - Interactive 2D and 3D plot visualizations
@@ -92,6 +95,11 @@ streamlit run Smart_Urban_Analyzer.py
   - OpenAI API key (set as environment variable `OPENAI_API_KEY`)
   - DeepSeek API key (set as environment variable `DEEPSEEK_API_KEY`)
   - Anthropic API key (set as environment variable `ANTHROPIC_API_KEY`)
+  -  Notification Services (optional, for alerts and reports):
+  - SMTP Settings (for email notifications):
+    - `SMTP_SERVER`, `SMTP_PORT`, `SMTP_USERNAME`, `SMTP_PASSWORD`, `SENDER_EMAIL`
+  - Twilio Settings (for SMS notifications):
+    - `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`
 
 ## Data Collection Methods
 
@@ -145,6 +153,16 @@ streamlit run Smart_Urban_Analyzer.py
 - Context-sensitive tooltips and explanations
 - Comprehensive documentation with example workflows
 - Tour navigation controls (Next/Previous/End tour)
+### Monitoring & Notification System
+- Property registration and tracking
+- Scheduled monitoring with customizable frequency (daily, weekly, monthly, quarterly)
+- Automated setback violation detection
+- Configurable violation threshold settings
+- Multi-channel notifications (email, SMS, in-app)
+- Comprehensive violation reports with visual evidence
+- Violation history and status tracking
+- Integration with email (SMTP) and SMS (Twilio) services
+
 
 ## Bilingual Support
 The application supports both English and Arabic interfaces, with comprehensive translations for all features and functionality.
@@ -162,6 +180,10 @@ The application supports both English and Arabic interfaces, with comprehensive 
   - `deepseek_tools.py`: DeepSeek AI integration
   - `plot_handler.py`: Plot visualization and rendering
   - `guide_system.py`: Interactive tour and help system
+  - `satellite_imagery.py`: Satellite imagery fetching and processing
+  - `notification_system.py`: Email and SMS notification services
+  - `monitoring_scheduler.py`: Scheduled monitoring and violation detection
+  - `cache_system.py`: Response caching and pattern learning for AI optimization
 
 ### AI Integration
 The application supports multiple AI providers with automatic fallback mechanisms:
@@ -174,6 +196,10 @@ The application supports multiple AI providers with automatic fallback mechanism
 - Add new data collection methods by extending the appropriate tab
 - Implement additional compliance checks in `compliance_checker.py`
 - Add support for new file formats in the relevant processor modules
+- Extend the notification system with new channels in `notification_system.py`
+- Customize monitoring schedules and thresholds in `monitoring_scheduler.py`
+- Add new satellite imagery providers in `satellite_imagery.py`
+- Implement additional AI service providers in the AI integration modules
 
 ## License
 
