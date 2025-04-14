@@ -61,7 +61,7 @@ The application is built for global use with flexible data integration capabilit
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/smart-urban-analyzer.git
+git clone https://github.com/MAIDINASSIM84/smart-urban-analyzer.git
 cd smart-urban-analyzer
 
 # Create a virtual environment (recommended)
