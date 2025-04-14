@@ -26,6 +26,13 @@ The application is built for global use with flexible data integration capabilit
   - GPS coordinates mapping and visualization
   - Survey equipment data import (Leica, Trimble, GPS tools)
   - Regional GIS Portal integration (Qatar GIS as implementation example)
+  
+- **Interactive User Guide**:
+  - Guided tours for key application features
+  - Contextual tooltips for enhanced usability
+  - Step-by-step instructions for complex workflows
+  - Comprehensive help documentation
+  - Interactive FAQ and reference materials
 
 - **Compliance Analysis**:
   - Automated setback requirement verification
@@ -45,29 +52,9 @@ The application is built for global use with flexible data integration capabilit
   - Drawing extraction from technical documents
   - Dimension detection from CAD files and technical drawings
 
-## Demo Screenshots
-
-<p align="center">
-  <img src="screenshots/screenshot1.png" alt="Main Interface" width="45%"/>
-  <img src="screenshots/screenshot2.png" alt="Setback Analysis" width="45%"/>
-</p>
-
-<p align="center">
-  <img src="screenshots/screenshot3.png" alt="GIS Integration" width="45%"/>
-  <img src="screenshots/screenshot4.png" alt="Compliance Report" width="45%"/>
-</p>
-
 ## Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/MAIDINASSIM84/smart-urban-analyzer.git
-cd smart-urban-analyzer
-
-# Create a virtual environment (recommended)
-python -m venv venv
-source venv/bin/activate  # On Windows use: venv\Scripts\activate
-
 # Install dependencies
 pip install -r requirements.txt
 
@@ -78,7 +65,8 @@ pip install ifcopenshell
 ## Running the Application
 
 ```bash
-streamlit run pdf_analyzer.py
+# Launch the Smart Urban Analyzer application
+streamlit run Smart_Urban_Analyzer.py
 ```
 
 ## System Requirements
@@ -107,6 +95,13 @@ streamlit run pdf_analyzer.py
 - Dimension detection from plans and elevations
 - AI-powered question-answering for complex documents
 
+### Urban Planning Chatbot
+- Interactive conversational AI for urban planning questions
+- Multiple AI provider support (OpenAI, DeepSeek, Anthropic)
+- Context-aware responses based on uploaded documents
+- Guidance on regulations, setbacks, and compliance requirements
+- Example prompts for common urban planning questions
+
 ### CAD and BIM Processing
 - Import DWG and DXF files for dimension extraction
 - Process IFC models for 3D building analysis
@@ -131,13 +126,20 @@ streamlit run pdf_analyzer.py
 - Coverage ratio calculation and compliance checking
 - Export results for reports and documentation
 
+### Interactive Help & Guide System
+- Guided tours for application features (Setback Analysis, GIS Analysis, Chatbot Usage)
+- Step-by-step instructions with animated highlights
+- Context-sensitive tooltips and explanations
+- Comprehensive documentation with example workflows
+- Tour navigation controls (Next/Previous/End tour)
+
 ## Bilingual Support
 The application supports both English and Arabic interfaces, with comprehensive translations for all features and functionality.
 
 ## Developer Documentation
 
 ### Project Structure
-- `pdf_analyzer.py`: Main application file with Streamlit interface
+- `Smart_Urban_Analyzer.py`: Main application file with Streamlit interface
 - `utils/`: Utility modules for different functionalities
   - `gis_tools.py`: GIS processing and visualization (Qatar implementation as reference)
   - `pdf_processor.py`: PDF document handling and text extraction
@@ -146,6 +148,7 @@ The application supports both English and Arabic interfaces, with comprehensive 
   - `compliance_checker.py`: Regulatory compliance verification
   - `deepseek_tools.py`: DeepSeek AI integration
   - `plot_handler.py`: Plot visualization and rendering
+  - `guide_system.py`: Interactive tour and help system
 
 ### AI Integration
 The application supports multiple AI providers with automatic fallback mechanisms:
@@ -159,25 +162,6 @@ The application supports multiple AI providers with automatic fallback mechanism
 - Implement additional compliance checks in `compliance_checker.py`
 - Add support for new file formats in the relevant processor modules
 
-## Future Development Roadmap
-
-- [ ] Add support for more regional GIS portals
-- [ ] Implement 3D visualization of building models
-- [ ] Add support for more CAD/BIM file formats
-- [ ] Enhance machine learning models for boundary detection
-- [ ] Create API endpoints for integration with other systems
-- [ ] Add support for additional languages
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
@@ -190,8 +174,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - OpenCV and NumPy for image processing
 - Folium for interactive maps
 - PaddleOCR and Tesseract for optical character recognition
-
-## Contact
-
-Project Link: [https://github.com/yourusername/smart-urban-analyzer](https://github.com/MAIDINASSIM84/smart-urban-analyzer),
-Email:mohamednassimmaidi@gmail.com
