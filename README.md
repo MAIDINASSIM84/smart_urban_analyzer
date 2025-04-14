@@ -195,5 +195,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Contact
 
-Project Link: [https://github.com/yourusername/smart-urban-analyzer](https://github.com/MAIDINASSIM84/smart-urban-analyzer)
+Project Link: [https://github.com/yourusername/smart-urban-analyzer](https://github.com/MAIDINASSIM84/smart-urban-analyzer),
 Email:mohamednassimmaidi@gmail.com
