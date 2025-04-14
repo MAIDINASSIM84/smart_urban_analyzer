@@ -51,6 +51,19 @@ The application is built for global use with flexible data integration capabilit
   - OCR for text extraction from images and PDFs
   - Drawing extraction from technical documents
   - Dimension detection from CAD files and technical drawings
+   # Advanced Features
+### Offline Mode
+The Smart Urban Analyzer includes a sophisticated caching system that:
+1. Stores API responses for future use
+2. Learns patterns from prior questions and answers
+3. Enables offline usage after initial training
+This makes it ideal for field work where internet connectivity may be limited.
+### Pattern Learning
+The application learns from interactions to improve over time:
+- Recognizes common question types
+- Identifies setback patterns
+- Stores term definitions
+- Builds a knowledge base of document sections
 
 ## Installation
 
