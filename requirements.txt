@@ -20,7 +20,7 @@ python-dotenv>=1.0.1
 folium>=0.14.0
 streamlit-folium>=0.13.0
 tiktoken>=0.5.1
-ifcopenshell 
+
 
 
 
