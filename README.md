@@ -2,9 +2,7 @@
 
 A sophisticated urban planning analysis platform that automates construction setback compliance checks using AI, geospatial data processing, and multi-source data integration.
 
-<p align="center">
-  <img src="generated-icon.png" alt="Smart Urban Analyzer" width="250"/>
-</p>
+
 
 ## Overview
 
