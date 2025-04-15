@@ -14,7 +14,7 @@ The application is built for global use with flexible data integration capabilit
 
 - **AI-Powered Document Analysis**:
   - Extract regulations and setback requirements from PDF documents
-  - Natural language Q&A about complex urban regulations
+  - Natural language Q&A about complex urban regulations=
   - Multiple AI providers with fallback mechanisms (OpenAI, DeepSeek, Anthropic)
   - Automatic dimension detection from technical drawings
 
@@ -187,8 +187,7 @@ The application supports both English and Arabic interfaces, with comprehensive 
 
 ### AI Integration
 The application supports multiple AI providers with automatic fallback mechanisms:
-- Primary: DeepSeek API (preferred for cost efficiency)
-- Secondary: OpenAI API (fallback option)
+- Primary: OpenAI API (fallback option)
 - Optional: Anthropic Claude (for specialized tasks)
 - Fallback: Rule-based processing without AI when API keys are unavailable
 
