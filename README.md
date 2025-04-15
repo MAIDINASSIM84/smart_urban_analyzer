@@ -208,7 +208,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Acknowledgments
 
 - Streamlit for the interactive web framework
-- OpenAI, DeepSeek, and Anthropic for AI capabilities
+- OpenAI and Anthropic for AI capabilities
 - LangChain for document processing and embeddings
 - OpenCV and NumPy for image processing
 - Folium for interactive maps
